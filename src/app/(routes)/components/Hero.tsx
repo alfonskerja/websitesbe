@@ -25,9 +25,6 @@ var items = [
 
 
 export default function Hero() {
-  function onclickhandle(event: Event){
-    console.log("aaaaaaaaaaaa", event)
-  }
   return (
     <Box
       id="hero"
@@ -88,35 +85,35 @@ export default function Hero() {
               `0 0 12px 8px ${alpha('#FF6B6B', 0.2)}`
           }}
         >
-        <Carousel 
-          autoPlay={true}
-          stopAutoPlayOnHover={true}
-          animation='slide'
-          duration={400}
-          cycleNavigation={true}
-          indicators={false}
-        >
-          {items.map( (item, i) => 
-          <div>
-            <Box
-            id="image"
-            sx={{
-              alignSelf: 'center',
-              height: { xs: 200, sm: 700 },
-              width: '100%',
-              backgroundImage: item.name,
-              backgroundRepeat: 'no-repeat',
-              backgroundSize: 'cover',
-              borderRadius: '10px',
-            }}
+          <Carousel 
+            autoPlay={true}
+            stopAutoPlayOnHover={true}
+            animation='slide'
+            duration={400}
+            cycleNavigation={true}
+            indicators={false}
           >
-            {/* <div>
-              {item.description}
-            </div> */}
-            </Box>
-          </div>
-          )}
-        </Carousel>
+            {items.map( (item, i) => 
+            <div key={i.toString()}>
+              <Box
+                id={i.toString()}
+                sx={{
+                  alignSelf: 'center',
+                  height: { xs: 200, sm: 700 },
+                  width: '100%',
+                  backgroundImage: item.name,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'cover',
+                  borderRadius: '10px',
+                }}
+              >
+              {/* <div>
+                {item.description}
+              </div> */}
+              </Box>
+            </div>
+            )}
+          </Carousel>
         </Box>
       </Container>
     </Box>
