@@ -6,13 +6,14 @@ import { GoogleMap, Marker, LoadScript } from '@react-google-maps/api';
 const MapContainer = () => {
   const defaultCenter = { lat: 37.7749, lng: -122.4194 };
   const mapContainerStyle = {
-    height: '400px',
+    height: '50vh',
     width: '100%',
   };
+  const gmap_api = process.env.GOOGLE_MAP_API_KEY
 
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyDXpvu0uQUXL-44EFQZXUYDQugvNCQatT4"
+      googleMapsApiKey={gmap_api!}
     >
       <GoogleMap
         mapContainerStyle={mapContainerStyle}

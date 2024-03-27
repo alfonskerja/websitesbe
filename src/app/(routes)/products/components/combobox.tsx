@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button as Buttonmui } from '@mui/material';
@@ -26,48 +26,64 @@ interface ComboProps {
     valueKey,
   }) => {
   const [open, setOpen] = React.useState(false)
-  const [value, setValue] = React.useState("")
+  const [value, setValue] = React.useState<string>("")
+  const [selectedvalue, setSelectedValue] = React.useState<string>("")
+  const [firstload, setFirstload] = React.useState<boolean>(true);
 
   const searchParams = useSearchParams();
   const router = useRouter();
 
-  React.useEffect(() => {
-    if(open==true){
-      counter = 2
+  if(firstload){
+    setFirstload(false);
+    const current2 = qs.parse(searchParams.toString());
+    const query2 = { ...current2 };
+    if(query2[valueKey]){
+      //@ts-ignore
+      setSelectedValue(query2[valueKey])
+      //@ts-ignore
+      setValue(query2[valueKey])
     }
-    if(open==false && counter ==2){
-      counter = 1
-      const current = qs.parse(searchParams.toString());
-      const query = {
-        ...current,
-        [valueKey]: value
-      };
-      
-      if (current[valueKey] != "" && value.toString() === "") {
-          query[valueKey] = null;
-      }
+    else{
+    }
+  }
 
-      const url = qs.stringifyUrl({
-        url: window.location.href,
-        query,
-      }, { skipNull: true });
-      router.push(url, {scroll: false});
+  if(open==true){
+    counter = 2
+  }
+  if(open==false && counter ==2){
+    counter = 1
+    const current = qs.parse(searchParams.toString());
+    const query = {
+      ...current,
+      [valueKey]: value
+    };
+    
+    if (current[valueKey] != "" && value.toString() === "") {
+        query[valueKey] = null;
     }
-  })
+
+    const url = qs.stringifyUrl({
+      url: window.location.href,
+      query,
+    }, { skipNull: true });
+    setSelectedValue(value)
+    router.push(url, {scroll: false});
+  }
 
   function resetButton(){
+    setSelectedValue("")
     const current = qs.parse(searchParams.toString());
-        const query = {
-        ...current,
-        };
-        query[valueKey] = null
+    const query = {
+    ...current,
+    };
+    query[valueKey] = null
 
-        const url = qs.stringifyUrl({
-        url: window.location.href,
-        query,
-        }, { skipNull: true });
-        router.push(url);
-        setValue("")
+    const url = qs.stringifyUrl({
+    url: window.location.href,
+    query,
+    }, { skipNull: true });
+    router.push(url);
+    setValue("")
   }
 
   return (
@@ -78,16 +94,28 @@ interface ComboProps {
         <hr className="my-4" />
         <div className="flex flex-wrap gap-2">
             <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-                <Button
-                role="combobox"
-                aria-expanded={open}
-                className="w-[200px] justify-between"
+            <PopoverTrigger asChild>      
+                {selectedvalue ? (
+                  <Button
+                  role="combobox"
+                  aria-expanded={open}
+                  className={cn(
+                    "justify-between w-full text-white bg-red-600" 
+                  )}
+                  >
+                  <div><p className="text-center">{selectedvalue}</p></div>
+                  </Button>
+                ) : (
+                  <Button
+                  role="combobox"
+                  aria-expanded={open}
+                  className={cn(
+                    "justify-between w-full text-white bg-black" 
+                )}
                 >
-                Select {name}...
-                
-                {/* <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" /> */}
-                </Button>
+                  <div><p className="text-center">Select {name}...</p></div>
+                  </Button>
+                )}
             </PopoverTrigger>
             <PopoverContent className="w-[200px] p-0">
                 <Command>

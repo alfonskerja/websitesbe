@@ -3,70 +3,82 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
-import { RangeSliderFilter } from '@/types';
 import qs from 'query-string';
 import { useSearchParams, useRouter } from 'next/navigation';
-import { Button, SliderPropsColorOverrides } from '@mui/material';
+import { Button } from '@mui/material';
 
 interface SliderProps {
-  allValue: RangeSliderFilter[];
+  allValue: number[];
   valueKey: string;
   name: string;
 };
+
+function getIndex_afterRefreshed<T>(arr: number[], valuebot: number, valuetop: number): number[] {
+  const indices: number[] = [];
+  arr.forEach((element, index) => {
+      if (element === valuebot) {
+        indices[0] = index
+      }
+      if (element === valuetop) {
+        indices[1] = index
+      }
+  });
+  return indices;
+}
+
+function removeDuplicates<RangeSliderFilter>(arr: RangeSliderFilter[]): RangeSliderFilter[] {
+  return Array.from(new Set(arr));
+}
 
 const RangeSlider: React.FC<SliderProps> = ({
   allValue,
   valueKey,
   name,
 }) => {
+  const allValueWithoutDuplicates: number[] = removeDuplicates(allValue);
+  const sortedValues = allValueWithoutDuplicates.slice().sort((a, b) => a - b);
   
-  const sortedValues = allValue.slice().sort((a, b) => a.value - b.value);
-
-  
-  const [uniqueval, setUniqueval] = React.useState<number[]>([]);
   const [displayValue, setDisplayVal] = React.useState<number[]>([]);
-  const [sliderStyling, setSliderStyling] = React.useState<SliderPropsColorOverrides>();
-  
+  const [firstload, setFirstload] = React.useState<boolean>(true);
   let [value, setValue] = React.useState<number[]>([]);
-  let satuan = name.substring(
-    name.indexOf("(") + 1, 
-    name.lastIndexOf(")")
-  );
-
-  if(uniqueval[0] == undefined){
-    let tempUniqueval: number[] = [];
-    for (let i = 0;i<sortedValues.length;i++){
-      if(i==0){
-        tempUniqueval.push(sortedValues[i].value)
-      }
-      else{
-        if(tempUniqueval[tempUniqueval.length-1] != sortedValues[i].value){
-          tempUniqueval.push(sortedValues[i].value)
-        }
-      }
-    }
-    setUniqueval(tempUniqueval);
-    setDisplayVal([sortedValues[0].value, sortedValues[sortedValues.length-1].value])
-    setValue([0, sortedValues.length-1])
-    setSliderStyling("primary" as SliderPropsColorOverrides)
-  }
-
+  
   const searchParams = useSearchParams();
   const router = useRouter();
   const bottom = valueKey.concat("min");
   const top = valueKey.concat("max");
 
-  const max = uniqueval.length - 1;
+  const max = sortedValues.length - 1;
   const min = 0;
+  
+  let satuan = name.substring(
+    name.indexOf("(") + 1, 
+    name.lastIndexOf(")")
+  );
+
+  if(firstload){
+    setFirstload(false);
+    setDisplayVal([sortedValues[0], sortedValues[sortedValues.length-1]])
+    const current2 = qs.parse(searchParams.toString());
+    const query2 = { ...current2 };
+    if(query2[bottom] && query2[top]){
+      const indices: number[] = getIndex_afterRefreshed(sortedValues, Number(query2[bottom]), Number(query2[top]));
+      setValue([indices[0], indices[1]])
+    }
+    else{
+      setValue([0, sortedValues.length-1])
+    }
+  }
+
 
   const handleChange = (event: Event) => {
-    let valueNow = [uniqueval[event.target!.value[0]], uniqueval[event.target!.value[1]]] as number[];
+    // @ts-ignore
+    let valueNow = [sortedValues[event.target!.value[0]], sortedValues[event.target!.value[1]]] as number[];
     const current = qs.parse(searchParams.toString());
     setDisplayVal([valueNow[0], valueNow[1]] as number[])
+    // @ts-ignore
     setValue([event.target!.value[0], event.target!.value[1]] as number[])
 
-    if (valueNow[0] === sortedValues[0].value && valueNow[1] === sortedValues[sortedValues.length-1].value) {
-      setSliderStyling("primary" as SliderPropsColorOverrides)
+    if (valueNow[0] === sortedValues[0] && valueNow[1] === sortedValues[sortedValues.length-1]) {
       const query = { ...current };
       query[bottom] = null;
       query[top] = null;
@@ -77,7 +89,6 @@ const RangeSlider: React.FC<SliderProps> = ({
       router.push(url, { scroll: false });
     }
     else {    
-      setSliderStyling("error" as SliderPropsColorOverrides)
       const query = {
         ...current,
         [bottom]: valueNow[0],
@@ -92,9 +103,8 @@ const RangeSlider: React.FC<SliderProps> = ({
   };
 
   function resetButton() {
-    setSliderStyling("primary" as SliderPropsColorOverrides)
     setValue([min, max] as number[]);
-    setDisplayVal([sortedValues[0].value, sortedValues[sortedValues.length-1].value] as number[])
+    setDisplayVal([sortedValues[0], sortedValues[sortedValues.length-1]] as number[])
     const current = qs.parse(searchParams.toString());
     const query = {
       ...current,
@@ -122,13 +132,12 @@ const RangeSlider: React.FC<SliderProps> = ({
           <Slider
             value={value}
             onChange={handleChange}
-            // valueLabelDisplay="auto"
             min={min}
             max={max}
             step={1}
             defaultValue={[min, max]}
-            color={sliderStyling}
-            // scale={calculateScale}
+            // @ts-ignore
+            color={value[0] == 0 && value[1] == sortedValues.length-1 ? "primary" : "error"}
           />
         </Box>
       </div>

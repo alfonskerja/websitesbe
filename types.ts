@@ -1,10 +1,3 @@
-export interface Menu {
-    id: string;
-    name: string;
-    href: string;
-    active: boolean;
-}
-
 export interface Products {
     id: string;
     name: string;
@@ -24,19 +17,6 @@ export interface Size {
 }
 
 export interface AllCategory {
-    id: string;
-    name: string;
-    slug: string;
-}
-
-export interface SingleProduct {
-    product: Products;
-    spec: Specifications[];
-    description: string;
-    imageUrl_catalogue: string[];
-}
-
-export interface Specifications {
     id: string;
     name: string;
     slug: string;
@@ -76,13 +56,6 @@ export interface Specifications {
     max_mechanical_cone_excursion_xmech: string;
 }
 
-// export interface SliderFilter {
-//     value: number;
-//     label: string;
-// }
-export interface RangeSliderFilter {
-    value: number;
-}
 export interface RangeFilters {
     id: string;
     namebottom: string;
@@ -90,4 +63,39 @@ export interface RangeFilters {
     origin: string;
     params: string;
     unit: string;
+}
+
+export interface AllProductsForHome {
+    allProducts: Products[];
+    allNetWeight: number[];
+    allQFactorQTS: number[];
+    allAirResonanceFS: number[];
+    allVoiceCoilDiameter: number[];
+    allImpedance: number[];
+    allSensitivity: number[];
+}
+
+export interface SingleProducts {
+    id: string;
+    name: string;
+    desc: string;
+    slug: string;
+    coverUrl: string;
+    coverAlt: string;
+    datasheet: string;
+    Url: string[];
+    Alt: string[];
+    size: Size;
+    categories: AllCategory[];
+    sub_categories: AllCategory[];
+    sub_sub_categories: AllCategory[];
+    specification: Specifications;
+}
+
+export interface CachedAllProducts {
+    allproduct: AllProductsForHome;
+    allcategories: AllCategory[];
+    allsubcategories: AllCategory[];
+    allsubsubcategories: AllCategory[];
+    allsizes: number[];
 }

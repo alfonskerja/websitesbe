@@ -1,3 +1,4 @@
+
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
@@ -14,6 +15,7 @@ import SearchBox from './searchbox';
 import Link from 'next/link';
 import { ClickAwayListener, Grow, MenuList, Paper, Popper, alpha } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import Image from 'next/image';
 
 const logoStyle = {
   width: '140px',
@@ -122,10 +124,12 @@ return (
               }}
             >
             <a href='/'>
-                <img
+                <Image
                     src={imagePath}
                     style={logoStyle}
                     alt="logo of SB Acoustics"
+                    width={100}
+                    height={100}
                 />
             </a>
               <Box sx={{ display: { xs: 'none', md: 'flex', margin: '2vw' } }}>                              
@@ -178,6 +182,11 @@ return (
                           onClick={handleMenuItemClick('/distributors')}
                         >
                           Distributors
+                        </Button>
+                        <Button
+                          onClick={handleMenuItemClick('/contactus')}
+                        >
+                          Contact Us
                         </Button>
                         <Button
                           onClick={handleMenuItemClick('/sbaudience')}

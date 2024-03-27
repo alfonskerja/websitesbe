@@ -1,12 +1,11 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { Filters, Products, RangeFilters } from "@/types";
 import { Badge } from "@/src/components/ui/badge";
 import NoResults from "@/src/components/ui/no-results";
 import ProductCard from "@/src/components/ui/product-card";
-import queryString from "query-string";
 
 interface MainProps {
   data: (Products)[];

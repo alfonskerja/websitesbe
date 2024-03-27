@@ -12,6 +12,7 @@ import FacebookIcon from '@mui/icons-material/GitHub';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import TwitterIcon from '@mui/icons-material/X';
 import { usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 const logoStyle = {
   width: '140px',
@@ -62,10 +63,12 @@ export default function Footer() {
         >
           <Box sx={{ width: { xs: '100%', sm: '60%' } }}>
             <Box sx={{ paddingBottom: '2vh' }}>
-              <img
+              <Image
                 src={imagePath}
                 style={logoStyle}
                 alt="logo of SB"
+                width={100}
+                height={100}
               />
             </Box>
             
@@ -89,8 +92,8 @@ export default function Footer() {
                   aria-label="Enter your email address"
                   placeholder="Your email address"
                   inputProps={{
-                    autocomplete: 'off',
-                    ariaLabel: 'Enter your email address',
+                    "autoComplete": 'off',
+                    "aria-label": 'Enter your email address',
                   }}
                 />
                 <Button type="submit" name="subscribe" id="mc-embedded-subscribe" className="button" value="Subscribe">Subscribe</Button>
@@ -114,13 +117,7 @@ export default function Footer() {
             Features
           </Link>
           <Link color="text.secondary" href="#">
-            Testimonials
-          </Link>
-          <Link color="text.secondary" href="#">
             Highlights
-          </Link>
-          <Link color="text.secondary" href="#">
-            Pricing
           </Link>
           <Link color="text.secondary" href="#">
             FAQs

@@ -1,5 +1,4 @@
 "use client"
-
 import { Urbanist } from 'next/font/google'
 import './globals.css'
 import Navbar from '../components/navbar'
@@ -21,7 +20,7 @@ export default function RootLayout({
   const SBAcoustics_Theme = createTheme(getLPTheme('light'));
   const SBAudience_Theme = createTheme(getLPTheme('dark'));
 
-  const titleName = pathname.includes("sbaudience") ? 'SB Audience' : 'SB Acoustics';
+  const titleName = pathname.includes("sbaudience") ? 'Home - SB Audience' : 'Home - SB Acoustics';
 
   return (
     <html lang="en">
