@@ -17,9 +17,9 @@ export const metadata: Metadata = {
 const Singlepages = async ({
     params
   }: {
-    params: { productId: number }
+    params: { productId: string }
   }) => {
-    let data = await getSingleProduct(Number(params.productId))
+    let data = await getSingleProduct(params.productId)
     let datasheet_url = `${process.env.NEXT_PUBLIC_API_URL}${data.datasheet}`
     return(
         <div className="flex pt-28">

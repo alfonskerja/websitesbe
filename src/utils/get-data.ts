@@ -24,7 +24,7 @@ export const getData = cache(async () => {
     return everything;
 })
 
-export const getSingleProduct = cache(async(id :number) =>{
+export const getSingleProduct = cache(async(id :string) =>{
     const singleproduct = await getProduct(id)
     return singleproduct;
 }) 

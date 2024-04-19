@@ -1,41 +1,20 @@
 import { AllCategory } from "@/types";
-import { ApolloClient, InMemoryCache, createHttpLink, gql } from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
 
-const URL=`${process.env.GRAPHQL_ENDPOINT}`;
-const GQL=`${process.env.FETCH_ALL_CATEGORIES}`;
-const TOKEN=`${process.env.FETCH_ALL_CATEGORIES_TOKEN}`;
+const API=`${process.env.FETCH_ALL_CATEGORIES}`;
 
 const getAllCategories = async (): Promise<AllCategory[]> => {
   let allCategories: Array<AllCategory> = []
-  const httpLink = createHttpLink({
-    uri: URL,
-  });
+  const response = await fetch(API);
+  if (!response.ok) {
+    throw new Error('Failed to fetch Categories');
+  }
+  const data = await response.json();
 
-  const authLink = setContext((_, { headers }) => {
-    const token = TOKEN;
-    return {
-      headers: {
-        ...headers,
-        authorization: token ? `Bearer ${token}` : '', 
-      }
-    };
-  });
-
-  const client = new ApolloClient({
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache()
-  });
-  const GET_DATA = gql`
-    ${GQL}
-  `;
-  const { data } = await client.query({query: GET_DATA})
-
-  for (let i = 0; i < data.categories.data.length; i++) {
+  for (let i = 0; i < data.length; i++) {
     let category: AllCategory = {
-      id: data.categories.data[i].id,
-      name: data.categories.data[i].attributes.name,
-      slug: data.categories.data[i].attributes.slug
+      id: data[i].id,
+      name: data[i].name,
+      slug: data[i].slug
     }
     allCategories.push(category)
   }
